@@ -1,37 +1,130 @@
-import './App.css'
-import { Navbar,Container, Stack } from 'react-bootstrap'
-import {Task} from './components/tasks'
+import "./App.css";
+import {
+  Navbar,
+  Container,
+  Stack,
+  Form,
+  Button,
+  InputGroup,
+} from "react-bootstrap";
+import { Task } from "./components/tasks";
+import { useEffect, useState } from "react";
 
-function App() {
-
-
-
-  
-  return (
-    <>
-      <div className="gap-3">
-        <Navbar className='bg-primary mb-4 h-100'>
-          <Container fluid="md justify-content-center">
-            <Navbar.Brand className='text-light fs-1' href='#'>ToDo</Navbar.Brand>
-          </Container>
-        </Navbar>
-        <Container fluid="md">
-          <Stack gap={2}>
-            <Task
-              nameTask='comer banana'
-            />
-            <Task
-              nameTask='comer banana'
-            />
-            <Task
-              nameTask='comer banana'
-            />
-          </Stack>
-        
-        </Container>
-      </div>
-    </>
-  )
+export interface ITask {
+  id: string;
+  nameTask: string;
+  isChecked: boolean;
 }
 
-export default App
+function App() {
+  const [tasks, setTasks] = useState<ITask[]>(() => {
+    const historyTasks = localStorage.getItem("tasks");
+    return historyTasks ? JSON.parse(historyTasks) : [];
+  });
+  const [nameNewTask, setNameNewTask] = useState<string>("");
+  const [filter, setFilter] = useState<string>("1");
+
+  function addTask(nameNewTask: string) {
+    const newTask: ITask = {
+      id: crypto.randomUUID(),
+      nameTask: nameNewTask,
+      isChecked: false,
+    };
+
+    setTasks([...tasks, newTask]);
+    console.log(tasks);
+    setNameNewTask("");
+  }
+
+  function deleteTask(id: string) {
+    setTasks((prev) => prev.filter((task) => task.id != id));
+  }
+
+  function changeTaskStatus(id: string) {
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, isChecked: !task.isChecked } : task
+      )
+    );
+  }
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
+  return (
+    <>
+      <Navbar className="bg-primary mb-4 h-100">
+        <Container fluid="md justify-content-center">
+          <Navbar.Brand className="text-light fs-1" href="#">
+            ToDo
+          </Navbar.Brand>
+        </Container>
+      </Navbar>
+
+      <Container fluid="md">
+        <InputGroup className="mb-3">
+          <Form.Control
+            type="text"
+            placeholder="Nome da Tarefa"
+            onChange={(e) => setNameNewTask(e.target.value)}
+            onKeyDown={(e) => {
+              if (nameNewTask != "") {
+                if (e.key === "Enter") {
+                  addTask(nameNewTask);
+                }
+              }
+            }}
+            value={nameNewTask}
+          ></Form.Control>
+          <Button
+            onClick={() => {
+              if (nameNewTask != "") {
+                addTask(nameNewTask);
+              }
+            }}
+          >
+            <i className="bi bi-plus-lg"></i>
+          </Button>
+        </InputGroup>
+
+        <Form.Select
+          aria-label="Filtrar tarefas"
+          className="mb-2 w-25"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          size="sm"
+        >
+          <option value="1">Não Concluídas</option>
+          <option value="2">Concluídas</option>
+          <option value="3">Todas</option>
+        </Form.Select>
+
+        <Stack gap={2}>
+          {tasks
+            .filter((task) => {
+              if (filter === "1") {
+                return !task.isChecked;
+              }
+              if (filter === "2") {
+                return task.isChecked;
+              }
+              return true;
+            })
+            .map((task) => (
+              <Task
+                key={task.id}
+                id={task.id}
+                nameTask={task.nameTask}
+                isChecked={task.isChecked}
+                deleteTask={deleteTask}
+                statusTask={changeTaskStatus}
+              ></Task>
+            ))}
+        </Stack>
+      </Container>
+    </>
+  );
+}
+
+export default App;
