@@ -36,6 +36,10 @@ function App() {
     setTasks((e) => e.filter((task) => task.id != id));
   }
 
+  // function changeTaskStatus(id:string){
+  //   setTasks((e)=> (e.map()))
+  // }
+
   return (
     <>
       <Navbar className="bg-primary mb-4 h-100">
