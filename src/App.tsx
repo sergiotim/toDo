@@ -8,7 +8,7 @@ import {
   InputGroup,
 } from "react-bootstrap";
 import { Task } from "./components/tasks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface ITask {
   id: string;
@@ -17,8 +17,12 @@ export interface ITask {
 }
 
 function App() {
-  const [tasks, setTasks] = useState<ITask[]>([]);
+  const [tasks, setTasks] = useState<ITask[]>(() => {
+    const historyTasks = localStorage.getItem("tasks");
+    return historyTasks ? JSON.parse(historyTasks) : [];
+  });
   const [nameNewTask, setNameNewTask] = useState<string>("");
+  const [filter, setFilter] = useState<string>("1");
 
   function addTask(nameNewTask: string) {
     const newTask: ITask = {
@@ -33,12 +37,20 @@ function App() {
   }
 
   function deleteTask(id: string) {
-    setTasks((e) => e.filter((task) => task.id != id));
+    setTasks((prev) => prev.filter((task) => task.id != id));
   }
 
-  function changeTaskStatus(id:string){
-    setTasks((e)=> (e.map((task)=>(task.id === id ? {...task,isChecked: !task.isChecked}: task))))
+  function changeTaskStatus(id: string) {
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, isChecked: !task.isChecked } : task
+      )
+    );
   }
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   return (
     <>
@@ -76,17 +88,39 @@ function App() {
           </Button>
         </InputGroup>
 
+        <Form.Select
+          aria-label="Filtrar tarefas"
+          className="mb-2 w-25"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          size="sm"
+        >
+          <option value="1">Não Concluídas</option>
+          <option value="2">Concluídas</option>
+          <option value="3">Todas</option>
+        </Form.Select>
+
         <Stack gap={2}>
-          {tasks.map((task) => (
-            <Task
-              key={task.id}
-              id={task.id}
-              nameTask={task.nameTask}
-              isChecked={task.isChecked}
-              deleteTask={deleteTask}
-              statusTask={changeTaskStatus}
-            ></Task>
-          ))}
+          {tasks
+            .filter((task) => {
+              if (filter === "1") {
+                return !task.isChecked;
+              }
+              if (filter === "2") {
+                return task.isChecked;
+              }
+              return true;
+            })
+            .map((task) => (
+              <Task
+                key={task.id}
+                id={task.id}
+                nameTask={task.nameTask}
+                isChecked={task.isChecked}
+                deleteTask={deleteTask}
+                statusTask={changeTaskStatus}
+              ></Task>
+            ))}
         </Stack>
       </Container>
     </>
