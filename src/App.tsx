@@ -36,9 +36,9 @@ function App() {
     setTasks((e) => e.filter((task) => task.id != id));
   }
 
-  // function changeTaskStatus(id:string){
-  //   setTasks((e)=> (e.map()))
-  // }
+  function changeTaskStatus(id:string){
+    setTasks((e)=> (e.map((task)=>(task.id === id ? {...task,isChecked: !task.isChecked}: task))))
+  }
 
   return (
     <>
@@ -84,6 +84,7 @@ function App() {
               nameTask={task.nameTask}
               isChecked={task.isChecked}
               deleteTask={deleteTask}
+              statusTask={changeTaskStatus}
             ></Task>
           ))}
         </Stack>
