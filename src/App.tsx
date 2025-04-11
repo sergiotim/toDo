@@ -1,13 +1,8 @@
 import "./App.css";
-import {
-  Navbar,
-  Container,
-  Stack,
-  Form,
-  Button,
-  InputGroup,
-} from "react-bootstrap";
+import { Container, Stack, Form, Button, InputGroup } from "react-bootstrap";
 import { Task } from "./components/tasks";
+import { Header } from "./components/Header";
+import { Footer } from "./components/Footer";
 import { useEffect, useState } from "react";
 
 export interface ITask {
@@ -53,16 +48,10 @@ function App() {
   }, [tasks]);
 
   return (
-    <>
-      <Navbar className="bg-primary mb-4 h-100">
-        <Container fluid="md justify-content-center">
-          <Navbar.Brand className="text-light fs-1" href="#">
-            ToDo
-          </Navbar.Brand>
-        </Container>
-      </Navbar>
+    <div className="main-container">
+      <Header></Header>
 
-      <Container fluid="md">
+      <Container fluid="md" className="content">
         <InputGroup className="mb-3">
           <Form.Control
             type="text"
@@ -123,7 +112,9 @@ function App() {
             ))}
         </Stack>
       </Container>
-    </>
+
+      <Footer></Footer>
+    </div>
   );
 }
 
