@@ -1,5 +1,5 @@
 import { Card, Form, Button } from "react-bootstrap";
-import { ITask } from "../../App";
+import { ITask } from "../../pages/home";
 
 interface TaskProps extends ITask {
   deleteTask: (id: string) => void;
