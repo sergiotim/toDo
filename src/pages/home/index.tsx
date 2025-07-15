@@ -47,6 +47,8 @@ export function Home() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
+  
+
   return (
     <>
       <Container fluid="md" className="content ">
