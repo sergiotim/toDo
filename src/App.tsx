@@ -39,7 +39,7 @@ function AppContent() {
 
   return (
     <div className="main-container d-flex flex-column">
-      <Header></Header>
+      <Header isLogged={isLogged} onLogout={handleLogout}></Header>
 
       <Routes>
         <Route

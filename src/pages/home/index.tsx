@@ -115,8 +115,6 @@ export function Home({onLogout}:HomeProps) {
               ></Task>
             ))}
         </Stack>
-        <Button onClick={onLogout}> Sair</Button>
-        {/* <Link to={"/login"}>login</Link> */}
       </Container>
     </>
   );
