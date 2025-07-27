@@ -11,7 +11,11 @@ export interface ITask {
   isChecked: boolean;
 }
 
-export function Home() {
+export interface HomeProps{
+  onLogout: () => void
+}
+
+export function Home({onLogout}:HomeProps) {
   const [tasks, setTasks] = useState<ITask[]>(() => {
     const historyTasks = localStorage.getItem("tasks");
     return historyTasks ? JSON.parse(historyTasks) : [];
@@ -58,7 +62,7 @@ export function Home() {
             placeholder="Nome da Tarefa"
             onChange={(e) => setNameNewTask(e.target.value)}
             onKeyDown={(e) => {
-              if (nameNewTask != "") {
+              if (nameNewTask !== "") {
                 if (e.key === "Enter") {
                   addTask(nameNewTask);
                 }
@@ -111,7 +115,8 @@ export function Home() {
               ></Task>
             ))}
         </Stack>
-        <Link to={"/login"}>login</Link>
+        <Button onClick={onLogout}> Sair</Button>
+        {/* <Link to={"/login"}>login</Link> */}
       </Container>
     </>
   );
