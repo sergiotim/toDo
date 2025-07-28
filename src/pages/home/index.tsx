@@ -4,6 +4,7 @@ import {Container} from "react-bootstrap";
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import api from "../../api";
 
 export interface ITask {
   id: string;
@@ -11,11 +12,7 @@ export interface ITask {
   isChecked: boolean;
 }
 
-export interface HomeProps{
-  onLogout: () => void
-}
-
-export function Home({onLogout}:HomeProps) {
+export function Home() {
   const [tasks, setTasks] = useState<ITask[]>(() => {
     const historyTasks = localStorage.getItem("tasks");
     return historyTasks ? JSON.parse(historyTasks) : [];
@@ -50,6 +47,10 @@ export function Home({onLogout}:HomeProps) {
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
+
+  useEffect(()=>{
+    console.log(api.get("/auth/profile",))
+  })
 
   
 

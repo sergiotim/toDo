@@ -8,7 +8,7 @@ import {
   Route,
   useNavigate,
 } from "react-router-dom";
-import { Auth } from "./pages/login";
+import { Auth } from "./pages/auth";
 import { useEffect, useState } from "react";
 
 function AppContent() {
@@ -46,7 +46,7 @@ function AppContent() {
           path="/login"
           element={
             isLogged ? (
-              <Home onLogout={handleLogout}></Home>
+              <Home></Home>
             ) : (
               <Auth onLoginSuccess={handleLoginSuccess}></Auth>
             )
@@ -57,7 +57,7 @@ function AppContent() {
           path="/"
           element={
             isLogged ? (
-              <Home onLogout={handleLogout}></Home>
+              <Home></Home>
             ) : (
               <Auth onLoginSuccess={handleLoginSuccess}></Auth>
             )
@@ -68,7 +68,7 @@ function AppContent() {
           path="*"
           element={
             isLogged ? (
-              <Home onLogout={handleLogout}></Home>
+              <Home></Home>
             ) : (
               <Auth onLoginSuccess={handleLoginSuccess}></Auth>
             )
@@ -82,9 +82,11 @@ function AppContent() {
 }
 
 function App() {
-  return (<Router>
-    <AppContent></AppContent>
-  </Router>)
+  return (
+    <Router>
+      <AppContent></AppContent>
+    </Router>
+  );
 }
 
 export default App;
