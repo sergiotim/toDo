@@ -1,35 +1,34 @@
 import { Stack, Form, Button, InputGroup } from "react-bootstrap";
-import { Task } from "../../components/tasks";
-import {Container} from "react-bootstrap";
+import { Task } from "../../components/Task";
+import { Container } from "react-bootstrap";
 
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import api from "../../api";
 
 export interface ITask {
   id: string;
-  nameTask: string;
+  name: string;
   isChecked: boolean;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export function Home() {
-  const [tasks, setTasks] = useState<ITask[]>(() => {
-    const historyTasks = localStorage.getItem("tasks");
-    return historyTasks ? JSON.parse(historyTasks) : [];
-  });
+  const [tasks, setTasks] = useState<ITask[]>([]);
   const [nameNewTask, setNameNewTask] = useState<string>("");
   const [filter, setFilter] = useState<string>("1");
 
-  function addTask(nameNewTask: string) {
-    const newTask: ITask = {
-      id: crypto.randomUUID(),
-      nameTask: nameNewTask,
-      isChecked: false,
-    };
+  async function addTask(nameNewTask: string) {
+    try {
+      const response = await api.post("/user", { name: nameNewTask });
+      const newTask = response.data;
 
-    setTasks([...tasks, newTask]);
-    console.log(tasks);
-    setNameNewTask("");
+      setTasks((prevTasks) => [...prevTasks, newTask]);
+      setNameNewTask("");
+    } catch (error) {
+      console.error("Erro ao adicionar tarefa", error);
+    }
   }
 
   function deleteTask(id: string) {
@@ -37,6 +36,7 @@ export function Home() {
   }
 
   function changeTaskStatus(id: string) {
+    
     setTasks((prev) =>
       prev.map((task) =>
         task.id === id ? { ...task, isChecked: !task.isChecked } : task
@@ -45,14 +45,17 @@ export function Home() {
   }
 
   useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
-
-  useEffect(()=>{
-    console.log(api.get("/auth/profile",))
-  })
-
-  
+    async function fetchTasks() {
+      try {
+        const response = await api.get("/user");
+        setTasks(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Erro ao buscar tarefas", error);
+      }
+    }
+    fetchTasks();
+  }, []);
 
   return (
     <>
@@ -109,7 +112,7 @@ export function Home() {
               <Task
                 key={task.id}
                 id={task.id}
-                nameTask={task.nameTask}
+                name={task.name}
                 isChecked={task.isChecked}
                 deleteTask={deleteTask}
                 statusTask={changeTaskStatus}

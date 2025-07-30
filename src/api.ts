@@ -23,16 +23,15 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
-      console.log(
-        "Requisição não autorizada (401). Provavelmente token expirado ou inválido."
-      );
-      localStorage.removeItem('accessToken')
+    if (error.response?.status === 401) {
+      console.warn("Token expirado ou inválido");
+      
+      localStorage.removeItem("accessToken");
 
-      window.location.href = '/login'
+      window.location.href = "/login";
     }
 
-    return Promise.reject(error)
+    return Promise.reject(error);
   }
 );
 

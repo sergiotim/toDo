@@ -1,14 +1,14 @@
 import { Card, Form, Button } from "react-bootstrap";
 import { ITask } from "../../pages/home";
 
-interface TaskProps extends ITask {
+interface TaskProps extends Omit<ITask,'userId' | 'createdAt' | 'updatedAt'> {
   deleteTask: (id: string) => void;
   statusTask: (id: string) => void;
 }
 
 export function Task({
   id,
-  nameTask,
+  name: nameTask,
   isChecked,
   deleteTask,
   statusTask,

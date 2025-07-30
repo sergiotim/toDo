@@ -38,6 +38,7 @@ export default function AuthForm({
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          autoComplete="username"
           disabled={isLoading}
         ></Form.Control>
         <Form.Text>Exemplo: exemplo@dominio.com</Form.Text>
@@ -51,6 +52,7 @@ export default function AuthForm({
           value={password}
           onChange={(s) => setPassword(s.target.value)}
           required
+          autoComplete="current-password"
           disabled={isLoading}
         ></Form.Control>
       </Form.Group>
