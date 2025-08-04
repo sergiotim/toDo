@@ -1,9 +1,9 @@
 import { Card, Form, Button } from "react-bootstrap";
 import { ITask } from "../../pages/home";
 
-interface TaskProps extends Omit<ITask,'userId' | 'createdAt' | 'updatedAt'> {
+interface TaskProps extends Omit<ITask, "userId" | "createdAt" | "updatedAt"> {
   deleteTask: (id: string) => void;
-  statusTask: (id: string) => void;
+  statusTask: (id: string, newStatus: boolean) => void;
 }
 
 export function Task({
@@ -22,7 +22,7 @@ export function Task({
               <Form.Check
                 type="checkbox"
                 checked={isChecked}
-                onChange={() => statusTask(id)}
+                onChange={() => statusTask(id, isChecked)}
               ></Form.Check>
               <span className={isChecked ? "text-decoration-line-through" : ""}>
                 {nameTask}

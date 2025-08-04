@@ -21,7 +21,9 @@ export function Home() {
 
   async function addTask(nameNewTask: string) {
     try {
-      const response = await api.post("/user", { name: nameNewTask });
+      const response = await api.post("/user/task/create", {
+        name: nameNewTask,
+      });
       const newTask = response.data;
 
       setTasks((prevTasks) => [...prevTasks, newTask]);
@@ -35,19 +37,25 @@ export function Home() {
     setTasks((prev) => prev.filter((task) => task.id != id));
   }
 
-  function changeTaskStatus(id: string) {
-    
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id ? { ...task, isChecked: !task.isChecked } : task
-      )
-    );
+  async function changeTaskStatus(id: string, newStatus: boolean) {
+    try {
+      console.log(id, newStatus);
+      await api.patch("/user/task/update", { id, newStatus: !newStatus });
+
+      setTasks((prevTask) =>
+        prevTask.map((prevTask) =>
+          prevTask.id === id ? { ...prevTask, isChecked: !newStatus } : prevTask
+        )
+      );
+    } catch (error) {
+      console.error("Erro ao mudar status da tarefa", error);
+    }
   }
 
   useEffect(() => {
     async function fetchTasks() {
       try {
-        const response = await api.get("/user");
+        const response = await api.get("/user/task");
         setTasks(response.data);
         console.log(response.data);
       } catch (error) {
