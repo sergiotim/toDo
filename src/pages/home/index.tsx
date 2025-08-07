@@ -33,14 +33,22 @@ export function Home() {
     }
   }
 
-  function deleteTask(id: string) {
-    setTasks((prev) => prev.filter((task) => task.id != id));
+  async function deleteTask(id: string) {
+    try{
+      await api.delete(`/task/delete/${id}`)
+
+      setTasks((prevTask) => prevTask.filter((task) => task.id != id));
+      
+    } catch(error){
+      console.error("Erro ao deletar a tarefa",error)
+    }
+
+
   }
 
   async function changeTaskStatus(id: string, newStatus: boolean) {
     try {
-      console.log(id, newStatus);
-      await api.patch("/user/task/update", { id, newStatus: !newStatus });
+      await api.patch("/task/update", { id, newStatus: !newStatus });
 
       setTasks((prevTask) =>
         prevTask.map((prevTask) =>
@@ -57,12 +65,12 @@ export function Home() {
       try {
         const response = await api.get("/user/task");
         setTasks(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error("Erro ao buscar tarefas", error);
       }
     }
     fetchTasks();
+
   }, []);
 
   return (
