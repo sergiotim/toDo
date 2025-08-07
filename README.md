@@ -35,7 +35,10 @@ Aplicação web de lista de tarefas (ToDo) desenvolvida com React, TypeScript e 
    ```
 4. Acesse `http://localhost:5173` no navegador.
 
+
 > **Nota:** É necessário que a API backend esteja rodando em `http://localhost:3000`.
+>
+> O backend para este projeto está disponível em: [https://github.com/sergiotim/to-do-backend](https://github.com/sergiotim/to-do-backend)
 
 ## Estrutura do Projeto
 ```
